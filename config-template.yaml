@@ -1,37 +1,35 @@
-chia-replot:
+# The Logfile where this utility will write logs to
+log_file: chia-replot.log
+log_level: DEBUG
 
-  # The Logfile where this utility will write logs to
-  log_file: /var/log/
-  log_level: DEBUG
+# The paths that you want this utility to monitor
+paths:
+  - /mnt/dst/01
+  - /mnt/dst/02
 
-  # The paths that you want this utility to monitor
-  paths:
-    - /mnt/dst/01
-    - /mnt/dst/02
+# The threshold, in GB that you want to maintain.
+# This utility will monitor the size of EACH disk and delete
+# the oldest plots until the threshold is maintained.
+# Note: minimum value is 110GB (approximately 1 k32 plot)
+threshold: 110
 
-  # The threshold, in number of plots that you want to maintain.
-  # This utility will monitor the size of EACH disk and delete
-  # the oldest plots until the threshold is maintained.
-  # Note: minimum value is 2 plots
-  threshold: 2
+# The date prior to which you wish to delete plots.
+# Since there is no easy way to distinguish poolable plots from
+# single plots, we use the date.
+#
+# This tool will compare the date in the plot FILENAME to this date
+# in order to determine which plots to remove
+date: 2021/05/16 19:00:30
 
-  # The date prior to which you wish to delete plots.
-  # Since there is no easy way to distinguish poolable plots from
-  # single plots, we use the date.
-  #
-  # This tool will compare the date in the plot FILENAME to this date
-  # in order to determine which plots to remove
-  date: 2021/05/16 19:00:30
+# The mode in which you want this tool to delete plots.
+# Available modes are:
+# - consecutive: will entirely clear the first path before moving to the next
+# - iterative: will rotate between paths on each run
+mode: consecutive
 
-  # The mode in which you want this tool to delete plots.
-  # Available modes are:
-  # - consecutive: will entirely clear the first path before moving to the next
-  # - iterative: will rotate between paths on each run
-  mode: consecutive
+# The interval, in seconds at which this tool will monitor
+# your drives and delete plots if necessary
+interval: 300
 
-  # The interval, in minutes at which this tool will monitor
-  # your drives and delete plots if necessary
-  interval: 5
-
-  # When set to true, this will only simulate plot removal
-  simulate: true
+# When set to true, this will only simulate plot removal
+simulate: true
