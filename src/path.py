@@ -16,9 +16,9 @@ class PathManager(ABC):
         self._config = config
         self._paths = self._config.raw.get('paths')
         self._current_path = Path(self._paths.pop(0))
-        self._date = datetime.strptime(self._config.raw.get('date'), '%y/%m/%d %H:%M:%S')
+        self._date = datetime.strptime(self._config.raw.get('date'), '%Y/%m/%d %H:%M:%S')
 
-        logging.info(f"Setting up chia-replot to delete plots older than {self._date.strftime('%y/%m/%d %H:%M')}")
+        logging.info(f"Setting up chia-replot to delete plots older than {self._date.strftime('%Y/%m/%d %H:%M')}")
 
     def start_loop(self):
         interval = self._config.get('interval')
@@ -47,6 +47,18 @@ class PathManager(ABC):
                     self.clear(self._config.get('simulate'))
                 else:
                     logging.info('Found no more paths with eligible plots')
+        else:
+            logging.debug(f"No action needed for {self._current_path}. Moving to next path")
+
+    def _set_next_path(self):
+        if len(self._paths) == 0:
+            logging.info('No eligible paths found. Resetting')
+            self._current_path = Path(self._paths.pop(0))
+            logging.info(f'No eligible plots found, moving to next path: {self._current_path}')
+            self.clear(self._config.get('simulate'))
+        else:
+            self._paths = self._config.raw.get('paths')
+
 
     def _get_plot(self) -> Optional[Path]:
         for plot in sorted(self._current_path.glob('*.plot')):

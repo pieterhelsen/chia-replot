@@ -49,7 +49,7 @@ def init(config: Config):
     logging.info(f"Starting chia-replot ({version()})")
 
     manager = PathManager(config)
-
+    manager.start_loop()
 
 
 def version():
